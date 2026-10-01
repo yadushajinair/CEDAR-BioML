@@ -1,0 +1,79 @@
+# Software and data versions used for the reported results
+python: 3.12.12 (venv)
+GPU: NVIDIA L40S (46 GB), driver 590.48.01, torch build cu130
+dataset: OAEI-ML/bio-ml revision 2026 -> commit c454644a334ab43754bc1070c0fb7fdd56a90a1d
+scoring kit: liseda-lab/OAEI-Bio-ML @ ed47e73c8d6b44e26035922c9b996289b49211b9
+base model fine-tuning script: NandhaKishorM/laya @ 6d942c92081fbc139e736bbd9ac0023223c29b7f
+base model: convaiinnovations/laya (English, repo root) @ 55cf4c4ebb4ebe31b2550e8bdf3bd21b99753851
+base model model.safetensors sha256: 891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c
+
+# ontology files (sha256 as published in the dataset's ontologies/SHA256SUMS.txt)
+NCIT NCIT-bd7a9a8a75e5-Thesaurus.owl 1a7182a7327ebc4181f7d6b0f7e81ed04dd258f1a86bd8f560e4a0d61439d58a
+DOID DOID-611355c44553-doid.owl 611355c445537fcf4bae2c519f1b3598af5a8fea793274316e35525b7d05e945
+FMA  FMA-beb3dc47979a-fma.owl beb3dc47979ad5434ef70fd02af4307f147f2023f7d8c2c57103b995191194c3
+SNOMED CT: licence-restricted, NOT included. Release used: US Edition 2026-03-01 (dataset pin
+  ...-37a3592ea51d), View-A OWL conversion with http://snomed.info/id/<id> class IRIs, as
+  distributed by the Bio-ML organisers to licensed participants.
+
+# pip freeze
+annotated-doc==0.0.5
+anyio==4.15.1
+certifi==2026.7.22
+click==8.5.0
+cuda-bindings==13.4.3
+cuda-pathfinder==1.8.2
+cuda-toolkit==13.0.3.0
+filelock==4.0.7
+fsspec==2026.9.0
+h11==0.16.0
+hf-xet==1.6.0
+httpcore==1.0.9
+httpx==0.28.1
+huggingface_hub==1.33.0
+idna==3.20
+Jinja2==3.1.6
+laya==0.3.22
+markdown-it-py==4.2.0
+MarkupSafe==3.0.3
+mdurl==0.1.2
+mpmath==1.3.0
+networkx==3.7
+numpy==2.5.3
+nvidia-cublas==13.1.1.3
+nvidia-cuda-cupti==13.0.85
+nvidia-cuda-nvrtc==13.0.88
+nvidia-cuda-runtime==13.0.96
+nvidia-cudnn-cu13==9.24.0.43
+nvidia-cufft==12.0.0.61
+nvidia-cufile==1.15.1.6
+nvidia-curand==10.4.0.35
+nvidia-cusolver==12.0.4.66
+nvidia-cusparse==12.6.3.3
+nvidia-cusparselt-cu13==0.8.1
+nvidia-nccl-cu13==2.30.7
+nvidia-nvjitlink==13.4.92
+nvidia-nvshmem-cu13==3.4.5
+nvidia-nvtx==13.0.85
+packaging==26.3
+pandas==3.0.6
+Pygments==2.21.0
+pyparsing==3.3.3
+python-dateutil==2.9.0.post0
+PyYAML==6.0.3
+RapidFuzz==3.14.6
+rdflib==7.6.0
+regex==2026.9.29
+rich==15.0.0
+safetensors==0.8.0
+setuptools==84.0.0
+shellingham==1.5.4
+six==1.17.0
+sympy==1.14.0
+tokenizers==0.23.2
+torch==2.14.0
+tqdm==4.70.1
+transformers==5.17.0
+triton==3.8.0
+typer==0.27.2
+typing_extensions==4.16.0
+wheel==0.48.0

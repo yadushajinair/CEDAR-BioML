@@ -1,0 +1,16 @@
+# environments, caches and generated files
+.venv/
+__pycache__/
+*.pyc
+cache/
+logs/
+checkpoints/
+outputs/
+external/
+
+# data: download with the commands in README.md; never commit it
+data/
+
+# SNOMED CT is licence-restricted: never commit the ontology or anything derived from its text
+*.owl
+*snomed*.json
