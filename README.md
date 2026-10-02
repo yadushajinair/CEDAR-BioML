@@ -43,57 +43,6 @@ Macro-MRR over the three pairs: **0.9639** (lexical reference 0.9152). A uniform
 of 100 candidates scores MRR ≈ 0.052.
 
 
-## System Architecture
-
-```mermaid
-flowchart TD
-    subgraph S1 ["Stage 1: Biomedical Ontology Ingestion & Representation D"]
-        A1["Raw Ontologies<br/>(NCIT, DOID, FMA, SNOMED CT)"] --> A2["Streaming OWL / OFN Parser<br/>(Role Whitelist: No UMLS/Mondo Leakage)"]
-        A2 --> A3["Per-Concept Token Budgeting (512 max)<br/>• Label (100% preserved)<br/>• Synonyms (35% budget)<br/>• 1-Hop Parents (15% budget)<br/>• Definition (Remaining tokens)"]
-    end
-
-    subgraph S2 ["Stage 2: Hybrid CEDAR Scoring Backbone"]
-        B1["100 Candidate Target Pool<br/>(Per Source Query)"] --> B2["Transparent Lexical Scorer<br/>• Exact Name/Label Match<br/>• Token Jaccard + Character Sim<br/>(Fixed weights, no learning)"]
-        A3 --> B3["Pairwise State Compiler<br/>[CLS] Prompt [SEP] [MASK]_1 EQUIV<br/>[MASK]_2 NOT_EQUIV [SEP] State [SEP]"]
-        B1 --> B3
-        B3 --> B4["LAYA-BioML Neural Scorer<br/>(ModernBERT-Large + Decision Head, 421M)<br/>Full-precision logit margin: z_EQUIV - z_NOT_EQUIV"]
-        B2 --> B5["Ensemble Fusion Scorer<br/>S_CEDAR = α · L_norm + (1 - α) · X_norm<br/>(α tuned on held-out train-dev)"]
-        B4 --> B5
-    end
-
-    subgraph S3 ["Stage 3: Offline Uncertainty Gating"]
-        B5 --> C1{"Uncertainty Gate<br/>• Margin(Rank 1) < 2.0 OR<br/>• Gap(Rank 1, Rank 2) < 0.5?"}
-        C1 -- "NO (~80% Confident)" --> E2["Preserve CEDAR Rank 1<br/>(Zero API Cost, Fast-Path)"]
-        C1 -- "YES (~20% Ambiguous)" --> D1["Escalate Query to Tier-2 Committee"]
-    end
-
-    subgraph S4 ["Stage 4: Biomedical Preprocessing & LLM Committee"]
-        D1 --> D2["LLMInputPreprocessor<br/>• Numeric IRI Resolution<br/>• Strip Clinical Tags: (finding), (disorder)<br/>• Budget Synonyms (Top-2 Concise)<br/>• XML Entity Unescaping"]
-        D2 --> D3["Sliding Window Attention Judge<br/>(DeepSeek V4.1 Flash)<br/>• Window 1 (Ranks 1–5)<br/>• Window 2 (Ranks 6–10, if needed)<br/>• 3 Cyclic Permutations (Cancels Position Bias)"]
-        D3 --> D4{"Proposed Rank Flip?"}
-        D4 -- "NO / No Consensus" --> E2
-        D4 -- "YES (Candidate Override)" --> D5["Evidence-Based Critic<br/>(Nemotron 550B Ultra)<br/>Chain-of-Thought Deep Verification<br/>Must meet ≥70% confidence"]
-    end
-
-    subgraph S5 ["Stage 5: Calibrated Score Fusion & Submission"]
-        D5 -- "Approved" --> E1["Calibrated Score Fusion<br/>S_final = (1 - w) · S_CEDAR + w · S_LLM"]
-        D5 -- "Rejected" --> E2
-        E1 --> E3["Rank Invariant Permutation Check"]
-        E2 --> E3
-        E3 --> E4["Official CodaBench Output<br/>(ncit-doid.tsv, snomed-fma.tsv, snomed-ncit.tsv)<br/>Macro H@1: ~0.980+ (Benchmark Ceiling)"]
-    end
-
-    classDef primary fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef llm fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
-    classDef gate fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
-    classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
-
-    class A1,A2,A3,B1,B2,B3,B4,B5 primary;
-    class C1 gate;
-    class D1,D2,D3,D4,D5 llm;
-    class E1,E2,E3,E4 output;
-
-
 ### Training seeds and selection
 
 | Pair | Seed | Training | Best epoch | train-dev MRR: model alone / with lexical (selection) | VALID MRR: model alone | VALID MRR: with lexical (train-dev α) |
