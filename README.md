@@ -19,6 +19,10 @@ slice (**train-dev**), never on VALID; the rules were fixed in advance in
 [PROTOCOL.md](PROTOCOL.md). No external mapping resource (UMLS, Mondo) and no cross-reference
 annotation is used.
 
+<p align="center">
+  <img src="cedar_architecture.png" alt="CEDAR Architecture" width="100%"/>
+</p>
+
 ## Results — official VALID
 
 All numbers are produced by the organisers' `score_local.py`, and every ranking passes their
